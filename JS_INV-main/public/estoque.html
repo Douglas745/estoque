@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Inventário</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <style>
+        body {
+            background: url(https://images.pexels.com/photos/6169051/pexels-photo-6169051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #0f0d0d;
+            margin: 0;
+            padding: 0;
+        }
+        
+
+        h1 {
+            text-align: center;
+        }
+
+        h2{
+            text-align: center;
+            color: #ffffff;
+        }
+
+        nav {
+            background-color: #222;
+            padding: 10px;
+            text-align: center;
+            width: 100px;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        nav ul li {
+            display: inline;
+            margin: 0 px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+        }
+
+        nav ul li a:hover {
+            text-decoration: underline;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #000;
+            color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #333;
+        }
+
+        tr:nth-child(odd) {
+            background-color: #000;
+        }
+
+        tr:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+        form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #72049d;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        #exportar {
+            display: left;
+            margin: 20px auto;
+            padding: 10px 20px;
+            background-color: #049d3c;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+        }
+
+        #exportar:hover {
+            background-color: #9400d3;
+        }
+        ul{
+            background-color: #69029d;
+            color: white;
+            padding: 50px;
+            width: 100px;
+            border-radius: 10%;
+        }
+       .getao{
+        background-color: #555;
+        color: #fff;
+        padding: 10px;
+        border-radius: 50%;
+       }
+       
+    </style>
+
+ <div class="container">
+        <div class="getao">
+            <b> <h1>Gestão do Estoquezen</h1></b>
+        </div>
+
+    <nav>
+        <ul>
+           <li><a href="adicionar.html">Adicionar Materias</a></li><br><br>
+        </ul>
+    </nav>
+
+    <nav>
+        <ul>
+            <li><a href="#" id="logout">Sair</a></li>
+        </ul>
+    </nav>
+    <button id="exportar">Exportar para Excel</button>
+
+    <h2>Estoque de materiais</h2>
+    <div>
+        <table id="tabela-produtos">
+            <thead>
+                <tr>
+                    <th>Codigo</th>
+                    <th>Material</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                    <th>Destino</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody id="produtos-lista">
+                <!-- Produtos serão inseridos aqui--> 
+            </tbody>
+        </table>
+    </div>
+</div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+        document.getElementById('exportar').addEventListener('click', () => {
+            const tabela = document.getElementById('tabela-produtos');
+            const wb = XLSX.utils.table_to_book(tabela, { sheet: "Inventário" });
+            XLSX.writeFile(wb, 'inventario.xlsx');
+        });
+
+        // Exemplo de preenchimento da tabela
+        const produtosLista = document.getElementById('produtos-lista');
+        db.collection('produtos').get().then(snapshot => {
+            snapshot.forEach(doc => {
+                const produto = doc.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${doc.id}</td>
+                    <td>${produto.nome}</td>
+                    <td>${produto.quantidade}</td>
+                    <td>${produto.preco}</td>
+                    <td>
+                        <a href="editar.html?id=${doc.id}">Editar</a>
+                    </td>
+                `;
+                produtosLista.appendChild(tr);
+            });
+        }).catch(error => {
+            console.error('Erro ao carregar produtos:', error);
+        });
+    </script>
+</body>
+</html>
+
