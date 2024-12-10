@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Editar Produto</title>
+</head>
+<body>
+    <style>
+        body {
+            background: url(https://images.pexels.com/photos/6169051/pexels-photo-6169051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        form {
+            background-color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #72049d;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #fff;
+        }
+
+        input[type="submit"] {
+            background-color: #444;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #666;
+        }
+
+        input::placeholder {
+            color: #777;
+        }
+    </style>
+
+  <div class="container">
+      <h1>Editar Produto</h1>
+     <form id="editar-form">
+          <label for="codigo">Codigo:</label>
+          <input type="number" id="codigo" required>
+          <label for="material">Material:</label>
+          <input type="text" id="material" required>
+          <label for="quantidade">Quantidade:</label>
+          <input type="number" id="quantidade" required>
+          <label for="preco">Preço:</label>
+          <input type="number" step="0.01" id="preco" required>
+          <input type="submit" value="Salvar">
+     </form>
+   </div>
+</body>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Firebase initialization (substitua com suas credenciais)
+        const firebaseConfig = {
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const id = urlParams.get('id');
+
+        if (id) {
+            db.collection('produtos').doc(id).get().then(doc => {
+                if (doc.exists) {
+                    const produto = doc.data();
+                    document.getElementById('nome').value = produto.nome;
+                    document.getElementById('quantidade').value = produto.quantidade;
+                    document.getElementById('preco').value = produto.preco;
+                } else {
+                    console.error('Documento não encontrado!');
+                }
+            }).catch(error => {
+                console.error('Erro ao obter documento:', error);
+            });
+        } else {
+            console.error('ID do produto não fornecido na URL');
+        }
+
+        document.getElementById('editar-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const nome = document.getElementById('nome').value;
+            const quantidade = document.getElementById('quantidade').value;
+            const preco = document.getElementById('preco').value;
+
+            if (id) {
+                db.collection('produtos').doc(id).update({
+                    nome,
+                    quantidade,
+                    preco
+                }).then(() => {
+                    alert("Produto atualizado com sucesso!");
+                    window.location.href = 'index.html'; // Redireciona após salvar
+                }).catch(error => {
+                    console.error('Erro ao atualizar produto:', error);
+                    alert('Erro ao atualizar produto. Tente novamente.');
+                });
+            } else {
+                console.error('ID do produto não fornecido na URL');
+            }
+        });
+    </script>
+</body>
+</html>

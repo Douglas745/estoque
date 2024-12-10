@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestão de Inventário</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <style>
+        body {
+            background: url(https://images.pexels.com/photos/6169051/pexels-photo-6169051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1, h2 {
+            text-align: center;
+        }
+
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #000;
+            color: #fff;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 10px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #222;
+        }
+
+        form {
+            width: 80%;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #222;
+            border-radius: 5px;
+        }
+
+        form input, form button {
+            display: block;
+            width: 100%;
+            margin-bottom: 10px;
+        }
+
+        button {
+            background-color: #049d3c;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #9400d3;
+        }
+    </style>
+
+    <div class="container">
+        <h1>Gestão do Estoquezen</h1>
+
+        <form id="adicionar-form">
+            <h2>Adicionar Material</h2>
+            <label for="material">Material:</label>
+            <input type="text" id="material" placeholder="Nome do material" required>
+
+            <label for="quantidade">Quantidade:</label>
+            <input type="number" id="quantidade" placeholder="Quantidade" required>
+
+            <label for="preco">Preço:</label>
+            <input type="number" id="preco" placeholder="Preço" required>
+
+            <button type="submit">Adicionar</button>
+        </form>
+
+        <h2>Estoque de Materiais</h2>
+        <table id="tabela-produtos">
+            <thead>
+                <tr>
+                    <th>Código</th>
+                    <th>Material</th>
+                    <th>Quantidade</th>
+                    <th>Preço</th>
+                    <th>Hora</th>
+                </tr>
+            </thead>
+            <tbody id="produtos-lista">
+                <!-- Produtos serão inseridos aqui --> 
+            </tbody>
+        </table>
+    </div>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+
+    <script>
+        // Configuração do Firebase
+        const firebaseConfig = {
+            apiKey: "SUA_API_KEY",
+            authDomain: "SEU_DOMINIO.firebaseapp.com",
+            projectId: "SEU_PROJECT_ID",
+            storageBucket: "SEU_BUCKET",
+            messagingSenderId: "SEU_SENDER_ID",
+            appId: "SEU_APP_ID"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+
+        const form = document.getElementById('adicionar-form');
+        const produtosLista = document.getElementById('produtos-lista');
+
+        // Função para carregar produtos na tabela
+        function carregarProdutos() {
+            produtosLista.innerHTML = ''; // Limpar tabela
+            db.collection('produtos').orderBy('hora', 'desc').get().then(snapshot => {
+                snapshot.forEach(doc => {
+                    const produto = doc.data();
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${doc.id}</td>
+                        <td>${produto.material}</td>
+                        <td>${produto.quantidade}</td>
+                        <td>${produto.preco}</td>
+                        <td>${new Date(produto.hora.toDate()).toLocaleString()}</td>
+                    `;
+                    produtosLista.appendChild(tr);
+                });
+            }).catch(error => {
+                console.error('Erro ao carregar produtos:', error);
+            });
+        }
+
+        // Função para adicionar um novo produto
+        form.addEventListener('submit', (e) => {
+            e.preventDefault();
+
+            const material = document.getElementById('material').value;
+            const quantidade = parseInt(document.getElementById('quantidade').value);
+            const preco = parseFloat(document.getElementById('preco').value);
+            const hora = new Date(); // Captura a hora atual
+
+            db.collection('produtos').add({
+                material,
+                quantidade,
+                preco,
+                hora
+            }).then(() => {
+                alert('Material adicionado com sucesso!');
+                form.reset();
+                carregarProdutos(); // Atualizar a tabela
+            }).catch(error => {
+                console.error('Erro ao adicionar material:', error);
+            });
+        });
+
+        // Carregar produtos ao abrir a página
+        carregarProdutos();
+    </script>
+</body>
+</html>
+

@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Adicionar Produto</title>
+</head>
+<body>
+    <style>
+        body {
+            background: url(https://images.pexels.com/photos/6169051/pexels-photo-6169051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+            font-family: Arial, sans-serif;
+            background-color: #111;
+            color: #fff;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #000;
+        }
+
+        form {
+            background-color: #000;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.8);
+            width: 300px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        form input[type="submit"] {
+            width: 100%;
+            padding: 10px;
+            background-color: #72049d;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+
+        label {
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="submit"] {
+            width: 90%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: none;
+            border-radius: 5px;
+            background-color: #222;
+            color: #fff;
+        }
+
+        input[type="submit"] {
+            background-color: #444;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #666;
+        }
+
+        input::placeholder {
+            color: #777;
+        }
+    </style>
+
+    <h1>Adicionar Produto</h1>
+    <form id="adicionar-form">
+        <label for="codigo">Codigo:</label>
+        <input type="number" id="codigo" required>
+        <label for="material">Material:</label>
+        <input type="text" id="material" required>
+        <label for="quantidade">Quantidade:</label>
+        <input type="number" id="quantidade" required>
+        <label for="preco">Preço:</label>
+        <input type="number" step="0.01" id="preco" required>
+        <input type="submit" value="Adicionar">
+    </form>
+
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script>
+        // Firebase initialization (substitua com suas credenciais)
+        /*const firebaseConfig = {
+            apiKey: "AIzaSyA1KWkEtAg1hwXZqqZGrI1YQYzKW2Nh_pg",
+            authDomain: "lista-31f31.firebaseapp.com",
+            databaseURL: "https://lista-31f31-default-rtdb.firebaseio.com",
+            projectId: "lista-31f31",
+            storageBucket: "lista-31f31.firebasestorage.app",
+            messagingSenderId: "422091432299",
+            appId: "1:422091432299:web:e87e70912ef4faeedbac2e"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();*/
+
+        document.getElementById('adicionar-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            
+            const nome = document.getElementById('nome').value;
+            const quantidade = document.getElementById('quantidade').value;
+            const preco = document.getElementById('preco').value;
+
+            // Adicionando produto ao Firebase
+            db.collection('produtos').add({
+                nome,
+                quantidade,
+                preco
+            }).then(() => {
+                // Redirecionar para a página de inventário após adicionar
+                window.location.href = 'estoque.html';
+            }).catch(error => {
+                console.error('Erro ao adicionar produto:', error);
+            });
+        });
+    </script>
+</body>
+</html>
