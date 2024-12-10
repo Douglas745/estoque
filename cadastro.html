@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <style>
+          * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            /*background: url(https://www.publicitarioscriativos.com/wp-content/uploads/2019/07/Ideias-de-publicidade-para-orc%CC%A7amentos-apertados.png);*/
+            background: url(https://images.pexels.com/photos/6169051/pexels-photo-6169051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1);
+            background-size: cover;
+            background-position: center;
+            min-height: 100vh;
+            color: #E0E0E0;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: ;
+            padding: 80px;
+            margin-left: 50%;
+        }
+
+        .form-container {
+            background-color: #000000;
+            border-radius: 20px;
+            padding: 50px;
+            margin-bottom: 20px;
+            width: 400px;
+            max-width: 500px;
+           
+        }
+
+        .form-container a {
+            font-size: 16px;
+            color: #fff;
+            text-decoration: none;
+
+        }
+
+        .form-container a:hover {
+            text-decoration: underline;
+        }
+
+
+        h1 {
+            color: #eff7ed;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            color: #ffffff;
+        }
+
+        input,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            border: none;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        input[type="date"] {
+            background-color: #333;
+            color: #E0E0E0;
+        }
+
+        button {
+            background-color: #6200EE;
+            color: #E0E0E0;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #48097c;
+            color: white;
+        } 
+    </style>
+    <body>
+        <div class="container">
+            <!-- Container de autenticação -->
+            <div id="authContainer" class="form-container">
+                <h1><b>Bem-vindo!</b></h1>
+                <h4>Cadastre-se Aqui!</h4>
+                <form id="formLogin">
+                    <input type="email" id="inputEmail" placeholder="E-mail" required />
+                    <input type="password" id="inputSenha" placeholder="Senha" required>
+                    <input type="confirmacao" id="inputConfir" placeholder="Confirmação senha" required>
+                    <br><br>
+                    <button type="submit">Entrar</button>
+                    <button id="botaoCadastro">Cadastrar-se</button>
+                </form>
+               
+            </div>
+</body>
+</html>
