@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EstoqueZen</title>
+    <style>
+         body {
+            background: url(https://images.pexels.com/photos/6169051/pexels-photo-6169051.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1) no-repeat center center fixed;
+            background-size: cover;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            text-align: center;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            padding: 20px;
+            margin: 0;
+            border-radius: 10px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+            background-color: #fff;
+            padding: 10px;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            background-color: rgba(0, 0, 0, 0.8);
+            padding: 10px;
+            border-radius: 10px;
+            margin: 20px auto;
+            width: fit-content;
+        }
+
+        nav ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            display: flex;
+            gap: 15px;
+        }
+
+        nav ul li a {
+            color: #fff;
+            text-decoration: none;
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+
+        nav ul li a:hover {
+            background-color: #7d7d7d;
+            
+        }
+
+        table {
+            width: 90%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: rgba(0, 0, 0, 0.8);
+            color: #fff;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        th, td {
+            border: 1px solid #444;
+            padding: 15px;
+            text-align: center;
+        }
+
+        th {
+            background-color: #333;
+            font-weight: bold;
+        }
+
+        tr:nth-child(even) {
+            background-color: #444;
+        }
+
+        tr:hover {
+            background-color: #555;
+            color: #fff;
+        }
+
+        #exportar {
+            display: block;
+            margin: 20px auto;
+            padding: 15px 30px;
+            background-color: #6200ea;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        #exportar:hover {
+            background-color: #3700b3;
+        }
+
+        canvas {
+            display: block;
+            margin: 30px auto;
+            background-color: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+        }
+
+    </style>
+</head>
+<body>
+    <h1>EstoqueZen</h1>
+
+    <nav>
+        <ul>
+            <li><a href="adicionar.html">Adicionar Produto</a></li><br><br>
+           
+        </ul>
+    </nav>
+    <nav>
+        <ul>
+            <li><a href="#" id="logout">Logout</a></li>
+        </ul>
+    </nav>
+
+    <h2>Materiais</h2>
+    <table>
+        <thead>
+            <tr>
+                <th>Nome</th>
+                <th>Quantidade</th>
+                <th>Preço</th>
+                <th>Excluir/Editar</th>
+            </tr>
+        </thead>
+        <tbody id="produtos-lista">
+            <!-- Produtos serão inseridos aqui -->
+        </tbody>
+    </table>
+
+    <canvas id="graficoProdutos" width="400" height="200"></canvas>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-firestore.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.0/firebase-auth.js"></script>
+    <script src="js/db.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/main.js"></script>
+ <script>
+       document.getElementById('exportar').addEventListener('click', () => {
+          const tabela = document.getElementById('tabela-produtos');
+          const wb = XLSX.utils.table_to_book(tabela, { sheet: "Inventário" });
+          XLSX.writeFile(wb, 'inventario.xlsx');
+    }); 
+     // Exemplo de preenchimento da tabela
+     const produtosLista = document.getElementById('produtos-lista');
+        db.collection('produtos').get().then(snapshot => {
+            snapshot.forEach(doc => {
+                const produto = doc.data();
+                const tr = document.createElement('tr');
+                tr.innerHTML = `
+                    <td>${produto.material}</td>
+                    <td>${produto.quantidade}</td>
+                    <td>${produto.preco}</td>
+                    <td>
+                        <a href="editar.html?id=${doc.id}">Editar</a>
+                    </td>
+                `;
+                produtosLista.appendChild(tr);
+            });
+        }).catch(error => {
+            console.error('Erro ao carregar produtos:', error);
+        });
+
+ </script>
+
+    
+    
+</body>
+</html>
